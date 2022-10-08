@@ -67,7 +67,35 @@ def create(request):
             util.save_entry(title, content)
             return render(request, "encyclopedia/entry.html", {
                 "title": title,
-                "entry": content
+                "entry": convert(title)
             })
     return render(request, "encyclopedia/create.html")
         
+def edit(request):
+    if request.method == "POST":
+        title = request.POST["title"]
+        content = convert(title)
+        return render(request, "encyclopedia/edit.html", {
+            "title": title,
+            "content": content
+        })
+
+def save(request):
+    if request.method=="POST":
+        title = request.POST["title"]
+        content = request.POST['content']
+        util.save_entry(title, content)
+        return render(request, "encyclopedia/entry.html", {
+            "title": title,
+            "entry": convert(title)
+        })
+
+def rand(request):
+    list = util.list_entries()
+    random_index = random.randint(0, len(list)-1)
+    title = list[random_index]
+    content = convert(title)
+    return render(request, "encyclopedia/entry.html", {
+            "title": title,
+            "entry": content
+        })
